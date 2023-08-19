@@ -61,21 +61,17 @@ router.get('/add',(req, res, next)=>{
 });
 
 router.post('/add', (req, res, next)=>{
-  console.log('64')
 
   db.User.findOne({
     where:{
       name:req.body.name
     }
   }).then(usr=>{
-    console.log('71')
 
     const form = {
       name: req.body.name,
       pass: req.body.pass
     };
-
-    console.log('78')
 
     if(usr != null){       //追加できません
       var data = {
