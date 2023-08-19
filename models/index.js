@@ -9,6 +9,22 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+
+
+/* const { Client } = require("pg");
+const db = new Client({
+  user: "cantstop",
+  host: "dpg-cjgancr37aks73bgka90-a.singapore-postgres.render.com",
+  database: "cantstop",
+  password: "2Hnm7d2PJwod8rrpZfN6I49HAYoV7aVI",
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+db.connect();
+ */
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -39,5 +55,7 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+//
 
 module.exports = db;
