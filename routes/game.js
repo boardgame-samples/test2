@@ -1,5 +1,5 @@
 var express = require('express');
-const { render } = require('../app.js');
+const { render, response } = require('../app.js');
 var router = express.Router();; // 作成したサーバー側Socketの外部関数を読み込み
 
 
@@ -319,6 +319,7 @@ function Stop(i){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
   if(Check(req,res) ){return}
 
   if(gamestate == 0){
@@ -340,6 +341,7 @@ router.get('/', function(req, res, next) {
 
 /* STARTクリック */
 router.post('/start', function(req, res, next){
+
   gamestate = 1;
   turn = 0
   playercount = players.length
@@ -359,6 +361,7 @@ router.post('/start', function(req, res, next){
 
 /* JOINクリック */
 router.post('/join', function(req,res,next){
+
   if(playerlist.length > 3){
     const io = require('../bin/www.js');
     io.emit("max",'');
@@ -383,6 +386,9 @@ router.post('/join', function(req,res,next){
     }
   }
 
+    res.writeHead(204, { 'Content-Length': '0' });
+    res.end();
+
 })
 
 /* EXITクリック */
@@ -405,6 +411,9 @@ router.post('/exit', function(req,res,next){
     ; //リストにないなら何もおこらない
   }
 
+  res.writeHead(204, { 'Content-Length': '0' });
+  res.end();
+
 })
 
 
@@ -417,6 +426,9 @@ router.post('/roll', function(req, res, next){
   action_status = 2;
   var login = req.session.login;
   Renew(login); 
+
+  res.writeHead(204, { 'Content-Length': '0' });
+  res.end();
 });
 
 /* array i クリック */
@@ -468,6 +480,8 @@ if(burst_status == 1){
   }
 
 }
+res.writeHead(204, { 'Content-Length': '0' });
+res.end();
 });
 
 
@@ -509,9 +523,12 @@ if(burst_status == 1){
    var login = req.session.login; 
    Renew(login);  
   }
-
 }
+
+res.writeHead(204, { 'Content-Length': '0' });
+res.end();
 });
+
 
 /* STOPを クリック */
 router.post('/stop', function(req, res, next){
@@ -535,6 +552,8 @@ router.post('/stop', function(req, res, next){
     Renew(login)}, 1600);
 
 //  Renew(req);
+  res.writeHead(204, { 'Content-Length': '0' });
+  res.end();
 });
 
 

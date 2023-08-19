@@ -9,8 +9,6 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json'); //[env];
 const db = {};
 
-
-
 /* const { Client } = require("pg");
 const db = new Client({
   user: "cantstop",

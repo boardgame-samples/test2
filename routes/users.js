@@ -85,7 +85,6 @@ router.post('/add', (req, res, next)=>{
 
     }else{
       ;
-      ;
       db.sequelize.sync()
       .then(()=>db.User.create(form)
       .then(usr =>{
