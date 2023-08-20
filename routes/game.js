@@ -335,6 +335,12 @@ router.get('/', function(req, res, next) {
     playerlist:playerlist
   }
   res.render('game/index', data);
+
+  var login = req.session.login;
+  setTimeout(function(){
+  Renew(login)}, 2000)
+
+
 }
 });
 
@@ -352,9 +358,9 @@ router.post('/start', function(req, res, next){
   io.emit("transfer", '');
 
   
-  var login = req.session.login;
-  setTimeout(function(){
-    Renew(login)}, 2000);
+ // var login = req.session.login;
+ // setTimeout(function(){
+ //   Renew(login)}, 2000);
 
 });
 
