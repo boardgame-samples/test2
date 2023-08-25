@@ -24,6 +24,7 @@ var action_status = 0
 var move_status = [0,0,0,0,0,0,0,0,0,0,0]
 var difference_status
 var burst_status = 0
+var check_difference = 0
 
 class Player{
   constructor(name,id){
@@ -64,6 +65,36 @@ function Renew(login){
 
   const io = require('../bin/www.js');
   io.emit("renew", msg);
+}
+
+
+function Cancel(login){
+  var order = Math.floor(turn % playercount)
+
+  msg = {
+    temp_status: temp_status,
+    close_status: close_status,
+    dice: dice,
+    dice_array: dice_array,
+    choice_set: choice_set,  
+    number1: number1,
+    number2: number2,
+    numbers: numbers,
+    login: login,
+    players:players,
+    rollstatus:rollstatus,
+    stopstatus:stopstatus,
+    choicestatus:choicestatus,
+    action_status:action_status,
+    order:order,
+    move_status:move_status,
+    difference_status:difference_status,
+    burst_status:burst_status
+
+  }
+
+  const io = require('../bin/www.js');
+  io.emit("cancel", msg);
 }
 
 
@@ -156,6 +187,7 @@ function Join(playername,playerid){
 
 function Roll(){
   dice_array = []
+  dice = [0,0,0,0]
   for(i=0; i<4; i++){
     dice[i] = Math.floor(Math.random() * 6) + 1;
   }
@@ -190,6 +222,83 @@ function Confirm(i){
     Choice()
   }
 }
+
+
+function Rollcheck(){
+  var temp_status_check
+  var close_status_check
+  var choice_set_check
+  check_difference = 0
+  for(var x in dice_array){
+
+    for(k=0; k<2; k++){
+      if(k==0){
+        check_number1 = dice_array[x][0]
+        check_number2 = dice_array[x][1]
+      }else if(k == 1){
+        check_number1 = dice_array[x][1]
+        check_number2 = dice_array[x][0]
+      }
+
+    for(j=1; j<3; j++){
+      if(j == 1){
+        var number = check_number1
+      }
+      if(j == 2){
+        var number = check_number2
+      }
+
+      temp_status_check = temp_status.slice();
+      close_status_check = close_status.slice();
+      choice_set_check = choice_set.slice();
+  
+      if(close_status_check[number - 2] == 0){
+        if(choice_set_check[0] != 0 && choice_set_check[1] != 0 && choice_set_check[2] != 0){
+          for(i=0; i<3; i++){
+            if(choice_set_check[i] == number){
+              temp_status_check[number - 2] += 1
+              if(temp_status_check[number - 2]>(12-(2*Math.abs(number-7)))){
+                close_status_check[number - 2] +=1;
+              }
+              break;
+            }
+          }
+        }else{
+          for(i=0; i<3; i++){
+            if(choice_set_check[i] == 0){
+              choice_set_check[i] = number
+              temp_status_check[number - 2] += 1
+              if(temp_status_check[number - 2] > (12-(2*Math.abs(number-7)))){
+                close_status_check[number - 2] +=1
+              }
+              break;        
+            }
+            else if(choice_set_check[i] == number){
+              temp_status_check[number - 2] += 1
+              if(temp_status_check[number - 2] > (12-(2*Math.abs(number-7)))){
+                close_status_check[number - 2] +=1
+              }
+              break;
+            }
+            else{
+              ;
+            }
+          }
+        }
+      }
+      for(i=0; i<11; i++){
+        if(temp_status[i] != temp_status_check[i]){
+          check_difference += 1
+        }
+      }
+
+    }
+  
+  }
+  };
+;
+}
+
 
 function Choice(){
   var temp_status_copy = temp_status.slice();
@@ -255,14 +364,14 @@ function Choice(){
 
   if(difference  == 0){
     close_status = close_status_copy.slice()
-    burst_status = 1;
+    burst_status = 2;
     return;
  
  //   temp_status = [0,0,0,0,0,0,0,0,0,0,0]
  //   choice_set = [0,0,0]
   }
 
-  dice_array = [];
+//  dice_array = [];
   numbers = []
   action_status = 1;
 
@@ -426,12 +535,30 @@ router.post('/exit', function(req,res,next){
 /* ROLLクリック */
 router.post('/roll', function(req, res, next){
   Roll()
+  //ここでRollcheckして、バーストでないならそのまま。バーストなら、次のターンに飛ばす処理。
+  console.log(dice_array[0])
+  Rollcheck();
+  ;
+  console.log(check_difference)
+  if(check_difference == 0){
+    burst_status = 1;
+    Burst()
+    var login = req.session.login;
+    turn += 1;
+    var order = Math.floor(turn % playercount)
+    temp_status = players[order].status.slice();
+    Renew(login);
+
+    burst_status = 0;
+
+  }else{
   rollstatus = 0;
   stopstatus = 0;
   choicestatus = 1;
   action_status = 2;
   var login = req.session.login;
   Renew(login); 
+  }
 
   res.writeHead(204, { 'Content-Length': '0' });
   res.end();
@@ -439,6 +566,7 @@ router.post('/roll', function(req, res, next){
 
 /* array i クリック */
 router.post('/confirm', function(req, res, next){
+      
   rollstatus = 1;
   stopstatus = 1;
   choicestatus = 0;
@@ -459,20 +587,24 @@ router.post('/confirm', function(req, res, next){
     console.log(confirm_key)
     Confirm(2)
   }
-
-if(burst_status == 1){
-    ;console.log('バースト')  //
-    Burst()
-    var login = req.session.login;
-    turn += 1;
-    var order = Math.floor(turn % playercount)
-    temp_status = players[order].status.slice();
-    Renew(login);
   
+  if(burst_status == 2){
+    ;console.log('バーストになるので不可')  //
+    rollstatus = 0;
+    stopstatus = 0;
+    choicestatus = 1;
+    action_status = 2;
+//    Burst()
+//    
+//    turn += 1;
+//    var order = Math.floor(turn % playercount)
+//    temp_status = players[order].status.slice();
 
+    var login = req.session.login;
+    Cancel(login);  
     burst_status = 0;
+  }
 
-}else{
 
   if(winner == 1){
     //res.redirect('/')
@@ -480,16 +612,15 @@ if(burst_status == 1){
     //実際は全員を/game/winへとばす
   }else{
 //    res.redirect('/game');   
-    dice = [0,0,0,0]
+//    dice = [0,0,0,0]
     var login = req.session.login;
     Renew(login); 
   }
+  
 
-}
 res.writeHead(204, { 'Content-Length': '0' });
 res.end();
 });
-
 
 
 /* Xを選ぶを クリック */
@@ -505,7 +636,7 @@ router.post('/choice', function(req, res, next){
     Choice();
   }
 
-if(burst_status == 1){
+if(burst_status == 2){
     ;console.log('バースト')  //
     Burst()
 

@@ -144,9 +144,27 @@
 
 <script>
   var myname = document.getElementById("myname").textContent
+  var burst_status
+
+/*
+  function Cancel(data){
+ 
+      var modalInner =document.getElementById('modalInner')
+      var modalInner =document.getElementById('modallower')
+      var modalp = document.getElementById('modalp')
+
+  
+      modallower.innerHTML = ''
+      modalInner.innerHTML =   "<p>選べません</p>";
+
+    modal(0,data);
+    modalInner.innerHTML = ''
+    burst_status = 0;
+    
+  }  */
 
   function Display(data){
-    var burst_status = data.burst_status
+   burst_status = data.burst_status
 //    console.log(data.move_status)
  //      document.getElementById("temp_status").textContent = data.temp_status
 
@@ -178,7 +196,6 @@
         preorder = order - 1;
       }
 
-
       modallower.innerHTML = ''
 
     if(players[preorder].name == myname){
@@ -188,7 +205,23 @@
     }
 
     modal(0,data);
+
   }
+  /*
+  else if(burst_status == 2){
+    var modalInner =document.getElementById('modalInner')
+      var modalInner =document.getElementById('modallower')
+      var players = data.players
+      var order = data.order
+   
+      modallower.innerHTML = ''
+
+    if(players[order].name == myname){
+      modalInner.innerHTML =   "<p>進めないため選べません</p>";
+    }
+    modal(0,data);
+  }  */
+  
 
     if(rollstatus == 0){
       rollel.style.display = "none";
@@ -465,6 +498,19 @@
       Display(data);
     });
 
+ 
+    socket.on("cancel", (data)=>{
+      console.log("connect_cancel")
+      var players = data.players
+      var order = data.order
+
+    if(players[order].name == myname){
+      alert('選択できません')
+    }
+    Display(data);
+
+    });
+
     socket.on("reset", (data)=>{
       var rp =data.resetplayer;
       alert(rp + 'がGAMEをRESETしました')
@@ -514,14 +560,15 @@
 
 
 	function clickAction(data) {
+
     if(i == 1){
       window.location.href = '/game';
     }else if(i==0){
 		modalThis.fadeOut('200');
 		wrap.fadeOut('200', function () {
     wrap.remove();
-    burst_status == 0
-    Display(data)
+  //  burst_status == 0
+//    Display(data)
 		});
     }
 	}
