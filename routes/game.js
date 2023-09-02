@@ -30,8 +30,8 @@ class Player{
   constructor(name,id){
     this.name = name
     this.id = id
-  //  this.status = [0,0,0,0,0,0,0,0,0,0,0]
-    this.status = [2,4,6,8,10,12,10,8,6,4,2]
+    this.status = [0,0,0,0,0,0,0,0,0,0,0]
+//    this.status = [2,4,6,8,10,12,10,8,6,4,2]
     this.win = 0
     this.point = []
   }
