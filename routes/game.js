@@ -602,6 +602,7 @@ router.post('/confirm', function(req, res, next){
 
     var login = req.session.login;
     Cancel(login);  
+    console.log(dice)
     burst_status = 0;
   }
 

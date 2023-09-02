@@ -319,8 +319,8 @@
 
         for(let i=0; i<4; i++){
 
-          
-            setTimeout(function(){
+       
+         setTimeout(function(){
 
         var dicevalue = dice[i]
         if(dicevalue != 0){
@@ -330,7 +330,24 @@
         diceimage = document.getElementById("diceimage");
         diceimage.appendChild(img_element);
         }
-        }, 400*i);
+        }, 400*i);  
+
+           /*
+        (function(i){
+         setTimeout(function() {
+        var dicevalue = dice[i]
+        if(dicevalue != 0){
+        const img_element = document.createElement('img');
+        img_element.src = "./images/dice" + dicevalue + ".png"
+        diceimage = document.getElementById("diceimage");
+        diceimage.appendChild(img_element);
+        }
+         }, i*1000);
+        })(i);    */
+
+
+
+
 
         }
 
@@ -546,7 +563,8 @@
     if(players[order].name == myname){
       alert('選択できません')
     }
-    Display(data);
+//    console.log(data.dice)
+ //   Display(data);
 
     });
 
