@@ -38,7 +38,7 @@
         <% if(playerlist[i] != null){ %>
           <td class="players player<%= i %>" id="player<%= i %>">
             <p>Player&nbsp;:&nbsp;<%= playerlist[i] %></p>
-            <p>Point&nbsp;:&nbsp;<span id="point<%= i %>">0</span></p>
+            <p>Goal&nbsp;:&nbsp;<span id="point<%= i %>">0</span></p>
           </td>
       <% }else{ %>
           <td class="hidden player<%= i %>"></td>
@@ -180,6 +180,10 @@
     var choicestatus = data.choicestatus;
     var order = data.order;
 
+    var action_status = data.action_status
+    var message = document.getElementById("message")
+    var difference_status = data.difference_status;
+
     console.log(rollstatus)
     console.log(burst_status)
 
@@ -203,9 +207,7 @@
     }else{
       modalInner.innerHTML =   "<p>" + players[preorder].name + "がバーストしました</p>";
     }
-
     modal(0,data);
-
   }
   /*
   else if(burst_status == 2){
@@ -248,7 +250,6 @@
         text = text + "■"  + i + ":" + data.players[i].status;
       }
 //      document.getElementById("players").textContent = text
-
        //document.getElementById("testtext").textContent = data.dice
 
        var diceform = document.getElementById("diceform")
@@ -261,7 +262,10 @@
        //arrayのフォームを表示
        if(dice_array.length != 0){
 
-       for(var i in dice_array){
+
+        setTimeout(function(){
+
+          for(var i in dice_array){
        const input = document.createElement('input')
        var obj = dice_array[i]
        var a = "array" + i
@@ -274,6 +278,9 @@
        }
         //document.querySelector('div').appendChild(form)
          diceform.appendChild(form);
+
+        
+        }, 1800);
         }
 
        var confirmation = document.getElementById('confirmation')
@@ -304,24 +311,45 @@
       diceimage.innerHTML = '';
       var dice = data.dice
       console.log(dice);
-      for(i=0; i<4; i++){
+
+      if(action_status == 2){
+
+
+
+
+        for(let i=0; i<4; i++){
+
+          
+            setTimeout(function(){
+
         var dicevalue = dice[i]
         if(dicevalue != 0){
+
         const img_element = document.createElement('img');
         img_element.src = "./images/dice" + dicevalue + ".png"
+        diceimage = document.getElementById("diceimage");
+        diceimage.appendChild(img_element);
+        }
+        }, 400*i);
 
+        }
+
+
+
+      }else{
+        for(i=0; i<4; i++){
+        var dicevalue = dice[i]
+        if(dicevalue != 0){
+
+        const img_element = document.createElement('img');
+        img_element.src = "./images/dice" + dicevalue + ".png"
         diceimage = document.getElementById("diceimage");
         diceimage.appendChild(img_element);
         }
       }
+      }
 
     //メッセージを表示
-      var action_status = data.action_status
-      var message = document.getElementById("message")
-      var difference_status = data.difference_status;
-
-
-
 
     for(var i in players){
       var pi = document.getElementById('player' + i);
@@ -337,6 +365,12 @@
       }else{
        pp.innerHTML = players[i].point
       }
+
+    }
+   
+    var dice_array_msg = ""
+    for(var i in dice_array){
+      dice_array_msg = dice_array_msg.concat("&nbsp;" + dice_array[i] + "&nbsp;/")
 
     }
 
@@ -379,8 +413,13 @@
                           "<p>" + players[order].name +"が" + difference_status + "を選びました</p>";
       ;
     }else if(action_status == 2){
+
+      setTimeout(function(){
       message.innerHTML = "<p>-" + players[order].name + "のターン-</p>"+
-                          "<p>" + players[order].name +"がダイスを振りました</p>";
+                          "<p>" + players[order].name +"がダイスを振りました</p>" +
+                          "<p><span class=yellowcolor>選択肢&nbsp;->&nbsp;/" + dice_array_msg + "</span></p>";
+                        }, 1800);
+
     }else if(action_status == 3){
       message.innerHTML = "<p>-" + players[order].name + "のターン-</p>"+
                           "<p>" + players[order].name +"がダイスを振りました</p>";
@@ -519,6 +558,11 @@
     });
 
     socket.on("end", (data)=>{
+
+   //   var canvas = document.getElementById("canvas") 
+   //   ctx = canvas.getContext("2d");
+
+
       var modalInner =document.getElementById('modalInner')
       var modalInner =document.getElementById('modallower')
       var players = data.players

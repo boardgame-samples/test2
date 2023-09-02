@@ -30,8 +30,8 @@ class Player{
   constructor(name,id){
     this.name = name
     this.id = id
-    this.status = [0,0,0,0,0,0,0,0,0,0,0]
- //   this.status = [2,4,6,8,10,12,10,8,6,4,2]
+  //  this.status = [0,0,0,0,0,0,0,0,0,0,0]
+    this.status = [2,4,6,8,10,12,10,8,6,4,2]
     this.win = 0
     this.point = []
   }
@@ -608,7 +608,12 @@ router.post('/confirm', function(req, res, next){
 
   if(winner == 1){
     //res.redirect('/')
-    End()
+    var login = req.session.login;
+    Renew(login);
+    setTimeout(function(){
+      End()}, 500);
+ //   End();
+
     //実際は全員を/game/winへとばす
   }else{
 //    res.redirect('/game');   
@@ -652,7 +657,12 @@ if(burst_status == 2){
 
   if(winner == 1){
     //res.redirect('/')
-    End()
+    var login = req.session.login;
+    Renew(login);
+
+    setTimeout(function(){
+      End()}, 500);
+//    End()
   }else{
 //   res.redirect('/game');  
    rollstatus = 1;
