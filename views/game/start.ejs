@@ -1,86 +1,81 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700&display=swap" rel="stylesheet">
 
-<head>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700&display=swap" rel="stylesheet">
-
-
-<body text="white" class="bgimage">
+  
+<body text="white"  class="bgimage">
   <div class="gap"></div>
 
 
 
 
   <div class="message startmsg">
-    <p>現在<span class="participant" id="pn">
-        <%= playerlist.length %>
-      </span>人<span id="participant"></span>が参加中です</p>
+    <p>現在<span class="participant" id="pn"><%= playerlist.length %></span>人<span id="participant"></span>が参加中です</p>
     <p>全員が参加後にSTARTしてください</p>
     <p><span id="max"></span></p>
   </div>
-  <table class="join">
-    <tr>
-      <td>
-        <form method="post" action="/game/join" id="joinform">
-          <input name="join" id="join" value="Join" type="button" class="joinbtn submitbtn" />
-        </form>
-      </td>
-      <td>
-        <form method="post" action="/game/exit" id="exitform">
-          <input name="exit" id="exit" value="Exit" type="button" class="joinbtn submitbtn" />
-        </form>
-      </td>
+    <table class="join">
+      <tr>
+        <td>
+          <form method="post" action="/game/join">
+            <input name="join" id="join" value="Join" type="button" class="joinbtn submitbtn"/>
+            </form>
+        </td>
+        <td>
+          <form method="post" action="/game/exit">
+            <input name="exit" id="exit" value="Exit" type="button" class="joinbtn submitbtn"/>
+            </form>
+        </td>
 
-    </tr>
-  </table>
+      </tr>
+    </table>
 
-  <div class="gamestart">
-    <form method="post" action="/game/start">
-      <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="button" class="startbtn submitbtn" />
-    </form>
-  </div>
+    <div class="gamestart">
+      <form method="post" action="/game/start">
+        <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="button" class="startbtn submitbtn"/>
+        </form>
+    </div>   
 
 
 
 
 
   <div class="bottomlink">
-    <a class="linktext underline" href="/">&lt;&lt; Topへ戻る</a>
+  <a class="linktext underline" href="/">&lt;&lt; Topへ戻る</a>
   </div>
 
-  <div class=myname id="myname">
-    <%= login.name %>
-  </div>
+  <div class=myname id="myname"><%= login.name %></div>
 
 
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
 
   <script>
-    const buttons = document.getElementsByClassName("submitbtn")
+const buttons = document.getElementsByClassName("submitbtn")
 
-    for (let button of buttons) {
-      const form = button.parentElement
-      button.onclick = () => {
-        const formData = new FormData(form)
-        const action = form.getAttribute("action")
-        const options = {
-          method: 'POST',
-          body: formData,
-        }
-        fetch(action, options).then((e) => {
-          if (e.status === 204) {
-            return
-          }
-          alert("error")
-        })
-      }
+for (let button of buttons) {
+  const form = button.parentElement
+  button.onclick = () => {
+    const formData = new FormData(form)
+    const action = form.getAttribute("action")
+    const options = {
+      method: 'POST',
+      body: formData,
     }
+    fetch(action, options).then((e) => {
+      if (e.status === 204) {
+        return
+      }
+      alert("error")
+    })
+  }
+}
 
-    function Display(data) {
+    function Display(data){
       var pn = document.getElementById('pn');
-      var plist = data.playerlist;
+      var plist =data.playerlist;
       plength = data.playerlist.length;
       pn.textContent = plength;
       ;
@@ -91,49 +86,48 @@
 
 
       //つぎに、joinが白文字exitが黒文字になる設定。
-      if (data.word == "join") {
+      if(data.word == "join"){
         participant.innerHTML = '(<span class="participant">' + data.playerlist + '</span>)'
 
         //自分の名前がまだ登録してない　playerlistにないとき
-        if (plist.includes(myname)) {
+        if(plist.includes(myname)){
           J.classList.add("textwhite")
-          E.classList.remove("textwhite")
+        E.classList.remove("textwhite")
         }
-
-      } else if (data.word == "exit") {
-        if (plength != 0) {
+        
+      }else if(data.word == "exit"){
+        if(plength != 0){
           participant.innerHTML = '(<span class="participant">' + data.playerlist + '</span>)'
-        } else {
+        }else{
           participant.innerHTML = ""
         }
 
-        if (plist.includes(myname)) {
+        if(plist.includes(myname)){
           ;
-        } else {
-          E.classList.add("textwhite")
-          J.classList.remove("textwhite")
+        }else{
+        E.classList.add("textwhite")
+        J.classList.remove("textwhite")
         }
-
+ 
       }
     }
 
 
     const socket = io();
-    socket.on("transfer", () => {
+    socket.on("transfer", ()=>{
       window.location.href = '/game'
 
     }
     );
 
-    socket.on("startrenew", (data) => {
-      console.log('aaa')
+    socket.on("startrenew", (data)=>{
       Display(data);
     });
 
-    socket.on("max", () => {
+    socket.on("max", ()=>{
       var max = document.getElementById("max")
       max.innerHTML = "※PLAYできるのは4人までです"
-        ;
+      ;
     });
 
 
@@ -141,5 +135,4 @@
 
 
 </body>
-
 </html>
