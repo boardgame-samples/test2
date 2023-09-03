@@ -27,7 +27,7 @@
 
     <div class="reset-button">
       <form  method="post" action="/game/reset">
-      <input class="resetinput submitbtn" name="reset" id="reset" value="Game Reset" type="button" />
+      <input class="resetinput" name="reset" id="reset" value="Game Reset" type="submit" />
       </form>
     </div>
 
@@ -73,7 +73,7 @@
     <tr>
       <td class="rollel">
         <form method="post" action="/game/roll">
-        <input class="btn submitbtn" name="roll" id="roll" value="Roll" type="button" />
+        <input class="btn" name="roll" id="roll" value="Roll" type="submit" />
         </form>
       </td>
   <!--         <div id="stopel">   -->
@@ -82,7 +82,7 @@
       </td>
       <td class="stopel">
         <form method="post" action="/game/stop">
-        <input class="btn submitbtn" name="stop" id="stop" value="stop" type="button" />
+        <input class="btn" name="stop" id="stop" value="stop" type="submit" />
         </form>
       </td>
    <!--           </div>    -->
@@ -143,26 +143,6 @@
   <script src="/socket.io/socket.io.js"></script>
 
 <script>
-  const buttons = document.getElementsByClassName("submitbtn")
-
-for (let button of buttons) {
-  const form = button.parentElement
-  button.onclick = () => {
-    const formData = new FormData(form)
-    const action = form.getAttribute("action")
-    const options = {
-      method: 'POST',
-      body: formData,
-    }
-    fetch(action, options).then((e) => {
-      if (e.status === 204) {
-        return
-      }
-      alert("error")
-    })
-  }
-}
-
   var myname = document.getElementById("myname").textContent
   var burst_status
 
@@ -290,28 +270,12 @@ for (let button of buttons) {
        const input = document.createElement('input')
        var obj = dice_array[i]
        var a = "array" + i
-       input.type = 'button'
+       input.type = 'submit'
        input.value = obj
        input.name = a
        input.classList.add("choicebutton")
        input.classList.add("choicenumber")
        form.appendChild(input)
-
-       button.onclick = () => {
-              const formData = new FormData(form)
-              const action = form.getAttribute("action")
-              const options = {
-                method: 'POST',
-                body: formData,
-              }
-              fetch(action, options).then((e) => {
-                if (e.status === 204) {
-                  return
-                }
-                alert("error")
-              })
-            }
-
        }
         //document.querySelector('div').appendChild(form)
     //    setTimeout(function(){
@@ -332,27 +296,12 @@ for (let button of buttons) {
           const input = document.createElement('input')
         var obj = numbers[i]
         var a = "numbers" + i 
-        input.type = 'button'
+        input.type = 'submit'
        input.value = obj
        input.name = a
        input.classList.add("choicebutton")
        input.classList.add("choicenumber")
        form2.appendChild(input)
-
-       button.onclick = () => {
-              const formData = new FormData(form)
-              const action = form.getAttribute("action")
-              const options = {
-                method: 'POST',
-                body: formData,
-              }
-              fetch(action, options).then((e) => {
-                if (e.status === 204) {
-                  return
-                }
-                alert("error")
-              })
-            }
         }
        confirmation.appendChild(form2);
       }
