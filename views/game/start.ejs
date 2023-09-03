@@ -19,13 +19,13 @@
     <table class="join">
       <tr>
         <td>
-          <form method="post" action="/game/join">
-            <input name="join" id="join" value="Join" type="submit" class="joinbtn"/>
+          <form method="post" action="/game/join"  id="joinform">
+            <input name="join" id="join" value="Join" type="button" class="joinbtn submitbtn"/>
             </form>
         </td>
         <td>
-          <form method="post" action="/game/exit">
-            <input name="exit" id="exit" value="Exit" type="submit" class="joinbtn"/>
+          <form method="post" action="/game/exit" id="exitform">
+            <input name="exit" id="exit" value="Exit" type="button" class="joinbtn submitbtn"/>
             </form>
         </td>
 
@@ -34,7 +34,7 @@
 
     <div class="gamestart">
       <form method="post" action="/game/start">
-        <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="submit" class="startbtn"/>
+        <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="button" class="startbtn submitbtn"/>
         </form>
     </div>   
 
@@ -53,6 +53,48 @@
   <script src="/socket.io/socket.io.js"></script>
 
   <script>
+    const buttons = document.getElementsByClassName("submitbtn")
+
+    for(let button of buttons){
+      const form = button.parentElement
+      button.onclick = () => {
+        const formData = new FormData(form)
+        const action = form.getAttribute("action")
+        const options = {
+          method: 'POST',
+          body: formData,
+        }
+        fetch(action, options).then((e) => {
+          if(e.status === 204) {
+            return
+          }
+          alert("保存できませんでした。")
+        })
+      }
+    }
+
+
+
+
+
+    /*const form = document.getElementById("joinform")
+    const submitButton = document.getElementById("join")
+
+    submitButton.onclick = () => {
+      const formData = new FormData(form)
+      const action = form.getAttribute("action")
+      const options = {
+        method: 'POST',
+        body: formData,
+      }
+      fetch(action, options).then((e) => {
+        if(e.status === 200) {
+          alert("保存しました。")
+          return
+        }
+        alert("保存できませんでした。")
+      })
+    }*/
 
     function Display(data){
       var pn = document.getElementById('pn');
