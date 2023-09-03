@@ -464,8 +464,7 @@ router.post('/start', function(req, res, next){
 
 //  res.redirect('/game')
   const io = require('../bin/www.js');
-  //setTimeout(()=>{io.emit("transfer", '');}, 2000);
-  io.emit("transfer", '')
+  io.emit("transfer", '');
 
   
  // var login = req.session.login;
@@ -477,7 +476,7 @@ router.post('/start', function(req, res, next){
 
 /* JOINクリック */
 router.post('/join', function(req,res,next){
-  console.log('join')
+
   if(playerlist.length > 3){
     const io = require('../bin/www.js');
     io.emit("max",'');
@@ -498,8 +497,7 @@ router.post('/join', function(req,res,next){
         word: "join"
       }
       const io = require('../bin/www.js');
-      //setTimeout(()=>{io.emit("startrenew", msg)}, 2000);
-      io.emit("startrenew", msg)
+      io.emit("startrenew", msg);
     }
   }
 
