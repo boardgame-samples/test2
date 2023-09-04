@@ -181,7 +181,7 @@ function Join(playername,playerid){
  //このあと、入力された情報から、プレイヤークラスを作成
   const player = new Player(playername,playerid)
   players.push(player) 
-  console.log(playerlist)
+  //console.log(playerlist)
 }
 
 
@@ -460,7 +460,7 @@ router.post('/start', function(req, res, next){
   gamestate = 1;
   turn = 0
   playercount = players.length
-  console.log(playercount)
+  //console.log(playercount)
 
 //  res.redirect('/game')
   const io = require('../bin/www.js');
@@ -482,7 +482,7 @@ router.post('/join', function(req,res,next){
     io.emit("max",'');
   }else{
     var pn = req.session.login.name
-    console.log(pn)
+    //console.log(pn)
 
     if(playerlist.includes(pn)){
       ; //trueならなにもしない
@@ -536,10 +536,10 @@ router.post('/exit', function(req,res,next){
 router.post('/roll', function(req, res, next){
   Roll()
   //ここでRollcheckして、バーストでないならそのまま。バーストなら、次のターンに飛ばす処理。
-  console.log(dice_array[0])
+  //console.log(dice_array[0])
   Rollcheck();
   ;
-  console.log(check_difference)
+  //console.log(check_difference)
   if(check_difference == 0){
     burst_status = 1;
     Burst()
@@ -566,30 +566,22 @@ router.post('/roll', function(req, res, next){
 
 /* array i クリック */
 router.post('/confirm', function(req, res, next){
-      
   rollstatus = 1;
   stopstatus = 1;
   choicestatus = 0;
-  confirm_key = Object.keys(req.body)
-
+  var confirm_key = req.body
   var key0 = 'array0';
   var key1 = 'array1';
   if(confirm_key.includes(key0)){
-
-    console.log(confirm_key)
     Confirm(0)
   }else if(confirm_key.includes(key1)){
-
-    console.log(confirm_key)
     Confirm(1)
   }else{
-
-    console.log(confirm_key)
     Confirm(2)
   }
   
   if(burst_status == 2){
-    ;console.log('バーストになるので不可')  //
+    //console.log('バーストになるので不可')  //
     rollstatus = 0;
     stopstatus = 0;
     choicestatus = 1;
@@ -599,10 +591,9 @@ router.post('/confirm', function(req, res, next){
 //    turn += 1;
 //    var order = Math.floor(turn % playercount)
 //    temp_status = players[order].status.slice();
-
     var login = req.session.login;
     Cancel(login);  
-    console.log(dice)
+    //console.log(dice)
     burst_status = 0;
   }
 
@@ -631,8 +622,7 @@ res.end();
 
 /* Xを選ぶを クリック */
 router.post('/choice', function(req, res, next){
-
-  choice_key = Object.keys(req.body)
+  var choice_key = req.body
   var key0 = 'numbers0'
   if(choice_key.includes(key0)){
     Choice()
@@ -643,7 +633,7 @@ router.post('/choice', function(req, res, next){
   }
 
 if(burst_status == 2){
-    ;console.log('バースト')  //
+    //console.log('バースト')  //
     Burst()
 
     var login = req.session.login;

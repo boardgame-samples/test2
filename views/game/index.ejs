@@ -27,7 +27,7 @@
 
     <div class="reset-button">
       <form  method="post" action="/game/reset">
-      <input class="resetinput" name="reset" id="reset" value="Game Reset" type="submit" />
+      <input class="resetinput submitbtn" name="reset" id="reset" value="Game Reset" type="button" />
       </form>
     </div>
 
@@ -73,7 +73,7 @@
     <tr>
       <td class="rollel">
         <form method="post" action="/game/roll">
-        <input class="btn" name="roll" id="roll" value="Roll" type="submit" />
+        <input class="btn submitbtn" name="roll" id="roll" value="Roll" type="button" />
         </form>
       </td>
   <!--         <div id="stopel">   -->
@@ -82,7 +82,7 @@
       </td>
       <td class="stopel">
         <form method="post" action="/game/stop">
-        <input class="btn" name="stop" id="stop" value="stop" type="submit" />
+        <input class="btn submitbtn" name="stop" id="stop" value="stop" type="button" />
         </form>
       </td>
    <!--           </div>    -->
@@ -143,6 +143,26 @@
   <script src="/socket.io/socket.io.js"></script>
 
 <script>
+const buttons = document.getElementsByClassName("submitbtn")
+
+for (let button of buttons) {
+  const form = button.parentElement
+  button.onclick = () => {
+    const formData = new FormData(form)
+    const action = form.getAttribute("action")
+    const options = {
+      method: 'POST',
+      body: formData,
+    }
+    fetch(action, options).then((e) => {
+      if (e.status === 204) {
+        return
+      }
+      alert("error")
+    })
+  }
+}
+  
   var myname = document.getElementById("myname").textContent
   var burst_status
 
@@ -184,8 +204,8 @@
     var message = document.getElementById("message")
     var difference_status = data.difference_status;
 
-    console.log(rollstatus)
-    console.log(burst_status)
+    //console.log(rollstatus)
+    //console.log(burst_status)
 
   if(burst_status == 1){
       var modalInner =document.getElementById('modalInner')
@@ -267,16 +287,35 @@
 
 
           for(var i in dice_array){
-       const input = document.createElement('input')
-       var obj = dice_array[i]
-       var a = "array" + i
-       input.type = 'submit'
-       input.value = obj
-       input.name = a
-       input.classList.add("choicebutton")
-       input.classList.add("choicenumber")
-       form.appendChild(input)
-       }
+            const input = document.createElement('input')
+            var obj = dice_array[i]
+            var a = "array" + i
+            input.type = 'button'
+            input.value = obj
+            input.name = a
+            input.classList.add("choicebutton")
+            input.classList.add("choicenumber")
+            form.appendChild(input)
+            input.onclick = () => {
+              const button = event.target
+              const name = button.getAttribute("name")
+              const confirm_key = [name]
+              const action = form.getAttribute("action")
+              const options = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(confirm_key),
+              }
+              fetch(action, options).then((e) => {
+                if (e.status === 204) {
+                  return
+                }
+                alert("error")
+              })
+            }
+          }
         //document.querySelector('div').appendChild(form)
     //    setTimeout(function(){
          diceform.appendChild(form);
@@ -294,14 +333,33 @@
         if(numbers.length != 0){
         for(var i in numbers) { 
           const input = document.createElement('input')
-        var obj = numbers[i]
-        var a = "numbers" + i 
-        input.type = 'submit'
-       input.value = obj
-       input.name = a
-       input.classList.add("choicebutton")
-       input.classList.add("choicenumber")
-       form2.appendChild(input)
+          var obj = numbers[i]
+          var a = "numbers" + i 
+          input.type = 'button'
+          input.value = obj
+          input.name = a
+          input.classList.add("choicebutton")
+          input.classList.add("choicenumber")
+          form2.appendChild(input)
+          input.onclick = () => {
+            const button = event.target
+            const name = button.getAttribute("name")
+            const choice_key = [name]
+            const action = form2.getAttribute("action")
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(choice_key),
+            }
+            fetch(action, options).then((e) => {
+              if (e.status === 204) {
+                return
+              }
+              alert("error")
+            })
+          }
         }
        confirmation.appendChild(form2);
       }
@@ -310,7 +368,7 @@
       var diceimage = document.getElementById("diceimage");
       diceimage.innerHTML = '';
       var dice = data.dice
-      console.log(dice);
+      //console.log(dice);
 
       if(action_status == 2){
 
@@ -466,8 +524,8 @@
 
     canvas.width = canvascontainer.offsetWidth;
     canvas.height = canvascontainer.offsetHeight;
-    console.log(canvas.width)
-    console.log(canvas.height)
+    //console.log(canvas.width)
+    //console.log(canvas.height)
     //画像を表示
    // img.src = imgsrc;
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
@@ -544,19 +602,19 @@
     }
     
     function calcu(a,b){
-      console.log((a + 1)*35 + 15)
-      console.log(450 -((b - 1 + Math.abs(7-a-2))*35 +15))
+      //console.log((a + 1)*35 + 15)
+      //console.log(450 -((b - 1 + Math.abs(7-a-2))*35 +15))
     }
 
     const socket = io();
     socket.on("renew", (data)=>{
-      console.log("connect_renew")
+      //console.log("connect_renew")
       Display(data);
     });
 
  
     socket.on("cancel", (data)=>{
-      console.log("connect_cancel")
+      //console.log("connect_cancel")
       var players = data.players
       var order = data.order
 

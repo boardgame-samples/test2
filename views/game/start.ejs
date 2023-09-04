@@ -20,13 +20,13 @@
       <tr>
         <td>
           <form method="post" action="/game/join">
-            <input name="join" id="join" value="Join" type="submit" class="joinbtn"/>
-            </form>
+            <input name="join" id="join" value="Join" type="button" class="joinbtn submitbtn"/>
+          </form>
         </td>
         <td>
           <form method="post" action="/game/exit">
-            <input name="exit" id="exit" value="Exit" type="submit" class="joinbtn"/>
-            </form>
+            <input name="exit" id="exit" value="Exit" type="button" class="joinbtn submitbtn"/>
+          </form>
         </td>
 
       </tr>
@@ -34,8 +34,8 @@
 
     <div class="gamestart">
       <form method="post" action="/game/start">
-        <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="submit" class="startbtn"/>
-        </form>
+        <input name="start" id="start" value="&gt;&gt;&nbsp;GAME START" type="button" class="startbtn submitbtn"/>
+      </form>
     </div>   
 
 
@@ -57,6 +57,7 @@
     
     for (let button of buttons) {
       const form = button.parentElement
+      const formData = new FormData(form)
       button.onclick = () => {
         const formData = new FormData(form)
         const action = form.getAttribute("action")
