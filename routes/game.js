@@ -25,6 +25,7 @@ var move_status = [0,0,0,0,0,0,0,0,0,0,0]
 var difference_status
 var burst_status = 0
 var check_difference = 0
+var close_status_ini =  [0,0,0,0,0,0,0,0,0,0,0]
 
 class Player{
   constructor(name,id){
@@ -152,6 +153,7 @@ choicestatus = 0
 action_status = 0
 move_status = [0,0,0,0,0,0,0,0,0,0,0]
 difference_status = []
+close_status_ini =  [0,0,0,0,0,0,0,0,0,0,0]
   ;
 var resetplayer = req.session.login.name;
 
@@ -456,6 +458,23 @@ router.get('/', function(req, res, next) {
 
 /* STARTクリック */
 router.post('/start', function(req, res, next){
+  temp_status = [0,0,0,0,0,0,0,0,0,0,0]
+close_status = [0,0,0,0,0,0,0,0,0,0,0]
+close_status_ini =  [0,0,0,0,0,0,0,0,0,0,0]
+winner = 0
+dice = [0,0,0,0]
+dice_array = []
+number1 = []
+number2 = []
+choice_set = [0,0,0]
+numbers = []
+
+rollstatus = 1
+stopstatus = 0
+choicestatus = 0
+action_status = 0
+move_status = [0,0,0,0,0,0,0,0,0,0,0]
+difference_status = []
 
   gamestate = 1;
   turn = 0
@@ -542,14 +561,20 @@ router.post('/roll', function(req, res, next){
   //console.log(check_difference)
   if(check_difference == 0){
     burst_status = 1;
+    Renew(login);
+
     Burst()
     var login = req.session.login;
     turn += 1;
+    close_status = close_status_ini.slice()
     var order = Math.floor(turn % playercount)
     temp_status = players[order].status.slice();
-    Renew(login);
-
     burst_status = 0;
+
+    setTimeout(function(){
+      Renew(login);
+    }, 8000);
+
 
   }else{
   rollstatus = 0;
@@ -632,6 +657,8 @@ router.post('/choice', function(req, res, next){
     Choice();
   }
 
+
+//この処理は起こりえない
 if(burst_status == 2){
     //console.log('バースト')  //
     Burst()
@@ -679,6 +706,7 @@ router.post('/stop', function(req, res, next){
   var order = Math.floor(turn % playercount)
   Stop(order)
   turn += 1;
+  close_status_ini = close_status.slice()
   var order = Math.floor(turn % playercount)
   temp_status = players[order].status.slice();
   rollstatus = 1;

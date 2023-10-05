@@ -334,7 +334,9 @@ a {
   width: 75%;
 }
 
-
+.none{
+  display: none;
+}
 
 .toptext{
   font-size: 65px;
@@ -480,3 +482,7 @@ bottom:50px;
   color: yellow;
 }
 
+
+.smallcharacter{
+  font-size: 32px;
+}

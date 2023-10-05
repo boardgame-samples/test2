@@ -32,17 +32,8 @@
            <% }} %>
           </ul>
         </div>
-        <div class="gap"></div>
-        <div class="form-group">
-          <label for="pass">PASSWORD</label>
-          <input type="text" name="pass" id="pass"
-          value="<%=form.pass%>" class="form-control form-size">
-          <ul class="text-danger">
-            <% if (err!=null){for (let i in err.get("pass")) { %>
-              <li><%= err.get("pass")[i].message %></li>
-           <% }} %>
-          </ul>
-        </div>
+
+       
         <div class="gap"></div>
         <div class="loginbutton">
         <input type="submit" value="Create" class="usrbtn">

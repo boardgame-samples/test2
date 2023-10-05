@@ -3,21 +3,14 @@ const router = express.Router();
 const db = require('../models/index');
 
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  db.User.findAll().then(users =>{
-    var data = {
-      title:'Users/Index',
-      content:users
-    }
-    res.render('users/index',data)
-  });
-});
+
 
 router.get('/login',(req, res, next)=>{
   var data = {
     title:'Users/Login',
-    content:'名前とパスワードを入力ください'
+    content1:'名前を入力してください',
+    content2:'※アカウント未登録の場合、',
+    content3:'下のリンクから登録してください'
   }
   res.render('users/login', data);
 })
@@ -25,8 +18,7 @@ router.get('/login',(req, res, next)=>{
 router.post('/login',(req, res, next)=>{
   db.User.findOne({
     where:{
-      name:req.body.name,
-      pass:req.body.pass,
+      name:req.body.name
     }
                                                                                                                              
 }).then(usr=>{
@@ -42,7 +34,9 @@ router.post('/login',(req, res, next)=>{
   }else{
     var data = {
 //      title:'Users/Login',
-      content:'名前かパスワードに問題があります。再入力ください。'
+      content1:'名前に問題があります。再入力ください。',
+      content2:'※アカウント未登録の場合、',
+      content3:'下のリンクから登録してください'
     }
     res.render('users/login', data);
   }
@@ -69,8 +63,7 @@ router.post('/add', (req, res, next)=>{
   }).then(usr=>{
 
     const form = {
-      name: req.body.name,
-      pass: req.body.pass
+      name: req.body.name
     };
 
     if(usr != null){       //追加できません

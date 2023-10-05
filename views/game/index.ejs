@@ -207,6 +207,7 @@ for (let button of buttons) {
     //console.log(rollstatus)
     //console.log(burst_status)
 
+    /*
   if(burst_status == 1){
       var modalInner =document.getElementById('modalInner')
       var modalInner =document.getElementById('modallower')
@@ -219,30 +220,50 @@ for (let button of buttons) {
       }else{
         preorder = order - 1;
       }
-
       modallower.innerHTML = ''
 
-    if(players[preorder].name == myname){
+
+      if(players[order].name == myname){
+        message.innerHTML = "<p>-あなたのターン-</p>"
+      }else{
+        message.innerHTML = "<p>-" + players[order].name + "のターン-</p>"
+      }
+
+      var onlymyturn = document.getElementById("onlymyturn");
+      onlymyturn.style.display = 'none';
+
+
+
+      for(let i=0; i<6; i++){
+      setTimeout(function(){
+
+        if(i<4){
+      var dicevalue = dice[i]
+      if(dicevalue != 0){
+      const img_element = document.createElement('img');
+      img_element.src = "./images/dice" + dicevalue + ".png"
+      diceimage = document.getElementById("diceimage");
+      diceimage.appendChild(img_element);
+      }
+      }else if(i ==4){
+
+
+      if(players[preorder].name == myname){
       modalInner.innerHTML =   "<p>バーストしました</p>";
-    }else{
+      }else{
       modalInner.innerHTML =   "<p>" + players[preorder].name + "がバーストしました</p>";
-    }
-    modal(0,data);
-  }
-  /*
-  else if(burst_status == 2){
-    var modalInner =document.getElementById('modalInner')
-      var modalInner =document.getElementById('modallower')
-      var players = data.players
-      var order = data.order
-   
-      modallower.innerHTML = ''
+      }
+      modal(0,data); 
 
-    if(players[order].name == myname){
-      modalInner.innerHTML =   "<p>進めないため選べません</p>";
-    }
-    modal(0,data);
-  }  */
+      }else if(i ==5){
+        return;
+      }
+
+      }, 400*i);  
+      }
+
+  }    */
+  
   
 
     if(rollstatus == 0){
@@ -372,9 +393,6 @@ for (let button of buttons) {
 
       if(action_status == 2){
 
-
-
-
         for(let i=0; i<4; i++){
 
        
@@ -389,23 +407,6 @@ for (let button of buttons) {
         diceimage.appendChild(img_element);
         }
         }, 400*i);  
-
-           /*
-        (function(i){
-         setTimeout(function() {
-        var dicevalue = dice[i]
-        if(dicevalue != 0){
-        const img_element = document.createElement('img');
-        img_element.src = "./images/dice" + dicevalue + ".png"
-        diceimage = document.getElementById("diceimage");
-        diceimage.appendChild(img_element);
-        }
-         }, i*1000);
-        })(i);    */
-
-
-
-
 
         }
 
@@ -536,7 +537,7 @@ for (let button of buttons) {
       var status = players[i].status
       for(j=0; j<11; j++){
       if(status[j] != 0){
-        Draw(j, status[j], i);
+        Draw(j, status[j], i, order);
       }
       }
     }
@@ -550,13 +551,52 @@ for (let button of buttons) {
       var status = data.move_status
     for(j=0; j<11; j++){
       if(status[j] != 0){
-        Draw(j, status[j], 4);
+        Draw(j, status[j], 4, order);
       }
       }  
 
+
+
+    
+  
+
+      if(burst_status == 1){
+        var onlymyturn = document.getElementById("onlymyturn");
+        onlymyturn.style.display = 'none'
+
+      setTimeout(function(){
+
+
+        if(players[order].name == myname){
+        message.innerHTML = "<p>あなたのターンを終了します</p>"
+      }else{
+        message.innerHTML = "<p>" + players[order].name + "のターンを終了します</p>"
+
+        }
+
+      var modalInner =document.getElementById('modalInner')
+      var modalInner =document.getElementById('modallower')
+
+      
+      if(players[order].name == myname){
+      modalInner.innerHTML =   "<p>バーストしました</p>";
+      }else{
+      modalInner.innerHTML =   "<p>" + players[order].name + "がバーストしました</p>";
+      }
+      modal(0,data); 
+
+
+      }, 2000);
+      }
+
+
+
+
+
+
   };
 
-    function Draw(a,b,c){
+    function Draw(a,b,c, order){
       var w = canvas.width;
       if(c == 0){
         ctx.fillStyle = "#355E3B";
@@ -598,6 +638,21 @@ for (let button of buttons) {
        ctx.arc((100 + (a + 1)*70 + 30)/1100*w,  (1000 -((b - 1 + Math.abs(7-a-2))*70 +30 ))/1100*w , 3*w/220, 0, 2*Math.PI);
         ctx.closePath();
         ctx.fill();
+
+          if(order == 0){
+            ctx.fillStyle = "#355E3B";
+          }else if(order == 1){
+            ctx.fillStyle = "#ffff00";
+          }else if(order == 2){
+            ctx.fillStyle = "#0000ff";
+          }else if(order == 3){
+            ctx.fillStyle = "#000000";
+          }
+          ctx.beginPath();
+          ctx.arc((100 + (a + 1)*70 + 30)/1100*w,  (1000 -((b - 1 + Math.abs(7-a-2))*70 +30 ))/1100*w , 2*w/220, 0, 2*Math.PI);
+          ctx.closePath();
+          ctx.fill();
+
       }
     }
     
